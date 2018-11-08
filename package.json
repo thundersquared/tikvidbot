@@ -1,0 +1,23 @@
+{
+  "name": "tikvidbot",
+  "version": "1.0.0",
+  "description": "TikTok Video Download Telegram Bot",
+  "main": "bot.js",
+  "author": "thundersquared (https://thundersquared.com)",
+  "license": "MIT",
+  "dependencies": {
+    "telegraf": "^3.25.0",
+    "telegraf-command-parts": "^1.0.3",
+    "telegraf-i18n": "^6.4.0",
+    "telegraf-ratelimit": "^2.0.0",
+    "telegraf-session-mysql": "^5.1.0"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=dev node bot.js",
+    "prod": "NODE_ENV=prod node bot.js",
+    "start": "NODE_ENV=prod node bot.js",
+    "docker:build": "scripts/build.sh",
+    "docker:run": "scripts/run.sh",
+    "docker": "yarn docker:build && yarn docker:run"
+  }
+}

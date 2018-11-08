@@ -1,0 +1,19 @@
+commands:
+  start: Welcome! Start by having a look at /help 😉
+  help: |
+    I’m a 🤖 that allows you to save TikTok videos locally.
+
+    In order to get a video, just share it to this chat and I'll send the file.
+
+    Note that there is a *10 requests limit* every 5 minutes.
+
+    I was made at thundersquared.com ⚡️ and I’m open source❤️!
+    github.com/thundersquared/tikvidbot
+
+  lang:
+    info: Your current language is set to ${language}!
+    changed: Awesome! You've changed the language to ${language}!
+rate:
+  limit: Rate limit exceeded
+  lookup: "\n\nLookup #${lookups}: <strong>${domain}</strong>"
+errors:

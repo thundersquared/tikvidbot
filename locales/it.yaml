@@ -3,9 +3,9 @@ commands:
   help: |
     Sono un 🤖 che ti permetterà di salvare localmente i video di TikTok.
 
-    Per ottenere un video, condividilo in questa chat e io ti invierò il file.
+    Per ottenere un video, condividi il link in questa chat e io ti invierò il file.
 
-    Nota che c'è un *limite di 5 richieste* ogni 5 minuti.
+    Nota che c'è un *limite di 10 richieste* ogni 5 minuti.
 
     Sono stato fatto a thundersquared.com ⚡️ e sono open source❤️!
     github.com/thundersquared/tikvidbot

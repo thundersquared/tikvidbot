@@ -3,7 +3,7 @@ commands:
   help: |
     I’m a 🤖 that allows you to save TikTok videos locally.
 
-    In order to get a video, just share it to this chat and I'll send the file.
+    In order to get a video, just share it's URL to this chat and I'll send the file.
 
     Note that there is a *10 requests limit* every 5 minutes.
 

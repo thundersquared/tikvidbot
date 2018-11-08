@@ -17,3 +17,5 @@ rate:
   limit: Rate limit exceeded
   lookup: "\n\nLookup #${lookups}: <strong>${domain}</strong>"
 errors:
+  http: Couldn't fetch shared URL. Please check if it's available and try again later.
+  stream: No valid streams were found. Please try again later!

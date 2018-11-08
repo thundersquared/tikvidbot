@@ -1,39 +1,34 @@
-const url           = require('url')
+const got           = require('got')
+const jsdom         = require('jsdom')
 const Extra         = require('telegraf/extra')
 const Markup        = require('telegraf/markup')
-const werist        = require('werist')
-const isDomainName  = require('is-domain-name')
-const isHttpUrl     = require('is-http-url')
+const { Script }    = require('vm')
+const { JSDOM }     = jsdom
 
 // Domain checks
-const check = ctx => {
+const command = ctx => {
   if (ctx.message.text) {
-    let domain
+    let url
 
     if (typeof ctx.state.command !== 'undefined') {
       if (ctx.state.command.command === 'lookup') {
-        domain = ctx.state.command.args
+        url = ctx.state.command.args
       }
     } else {
-      domain = ctx.message.text
+      url = ctx.message.text
     }
 
-    if (isHttpUrl(domain)) {
-      let query = url.parse(domain)
-      domain = query.hostname
-    }
-
-    if (isDomainName(domain)) {
+    if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+?\//)) {
       if (ctx.session) {
         ctx.session.lookups++
       }
 
       ctx.replyWithChatAction('typing')
 
-      return lookup(ctx, domain)
+      return download(ctx, url)
     } else {
       if (ctx.message.chat.type !== 'group' || ctx.message.chat.type !== 'supergroup') {
-        return ctx.reply(ctx.i18n.t('errors.domain'))
+        return ctx.reply(ctx.i18n.t('errors.url'))
       }
     }
   }
@@ -42,31 +37,30 @@ const check = ctx => {
 }
 
 // Lookup process
-const lookup = (ctx, domain) => {
-  werist.lookup(domain, (err, data) => {
-    if (err) {
-      console.error(err)
-      return ctx.reply(ctx.i18n.t('errors.whois'))
-    }
+const download = async (ctx, url) => {
+  try {
+    const response = await got(url)
+    if (response.body) {
+      const dom = new JSDOM(response.body, { runScripts: 'outside-only' })
 
-    if (data) {
-      let whois = data.split('<<<')[0]
+      let scripts = dom.window.document.getElementsByTagName('script')
+      let script = [...scripts].filter(e => e.innerHTML.match(/var data/)).pop()
+      let data = script.innerHTML.split('$(function')[0]
+      let s = new Script(data)
+      dom.runVMScript(s)
 
-      whois = `<pre>${whois}</pre>`
-
-      if (ctx.session) {
-        whois += ctx.i18n.t('rate.lookup', {
-          lookups: ctx.session.lookups,
-          domain: domain
+      if (dom.window.data && dom.window.data.video) {
+        return ctx.replyWithVideo({
+          source: got.stream(dom.window.data.video.download_addr.url_list.pop())
         })
+      } else {
+        return ctx.reply(ctx.i18n.t('errors.stream'))
       }
-
-      return ctx.reply(whois, {
-        disable_web_page_preview: true,
-        parse_mode: 'HTML'
-      })
     }
-  })
+  } catch (error) {
+    console.error(error)
+    return ctx.reply(ctx.i18n.t('errors.http'))
+  }
 }
 
-module.exports = check
+module.exports = command

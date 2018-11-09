@@ -12,19 +12,27 @@ const languages = [
 ]
 
 const command = ctx => {
-  if (ctx.state.command.command === 'lang') return
+  if (!ctx.session) return
 
-  let lang = ctx.state.command.args
+  if (ctx.state.command.command !== 'lang') return
 
-  if (languages.find(e => e.code === lang)) {
-    lang = languages.find(e => e.code === lang)
+  if (ctx.state.command && ctx.state.command.args) {
+    let lang = ctx.state.command.args
 
-    ctx.session.lang = lang.code
-    ctx.i18n.locale(lang.code)
+    if (languages.find(e => e.code === lang)) {
+      lang = languages.find(e => e.code === lang)
 
-    return ctx.reply(ctx.i18n.t('commands.lang.changed', {
-      language: lang.name
-    }))
+      ctx.session.lang = lang.code
+      ctx.i18n.locale(lang.code)
+
+      return ctx.reply(ctx.i18n.t('commands.lang.changed', {
+        language: lang.name
+      }))
+    }
+  }
+
+  if (ctx.session && !ctx.session.lang) {
+    ctx.session.lang = languages[0]
   }
 
   return ctx.reply(ctx.i18n.t('commands.lang.info', {

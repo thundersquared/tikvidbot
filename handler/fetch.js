@@ -11,7 +11,7 @@ const command = ctx => {
     let url
 
     if (typeof ctx.state.command !== 'undefined') {
-      if (ctx.state.command.command === 'lookup') {
+      if (['fetch', 'download'].indexOf(ctx.state.command.command) !== -1) {
         url = ctx.state.command.args
       }
     } else {

@@ -65,8 +65,11 @@ bot.start((ctx) => {
 bot.command('help', (ctx) => ctx.reply(ctx.i18n.t('commands.help'), {
   parse_mode: 'Markdown'
 }))
-bot.command('lookup', fetch)
+
 bot.command('lang', lang)
+
+bot.command('fetch', fetch)
+bot.command('download', fetch)
 
 bot.on('text', fetch)
 

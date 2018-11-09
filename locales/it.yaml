@@ -17,5 +17,6 @@ rate:
   limit: Limite richieste superato
   lookup: "\n\nLookup #${lookups}: <strong>${domain}</strong>"
 errors:
+  url: Purtroppo posso scaricare video da TikTok e questa non sembra essere una URL valida.
   http: Impossibile caricare URL. Controlla che sia ancora disponibile e riprova più tardi!
   stream: Nessun stream valido trovato. Riprova più tardi!

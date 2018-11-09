@@ -50,9 +50,13 @@ const download = async (ctx, url) => {
       dom.runVMScript(s)
 
       if (dom.window.data && dom.window.data.video) {
-        return ctx.replyWithVideo({
-          source: got.stream(dom.window.data.video.download_addr.url_list.pop())
-        })
+        try {
+          return ctx.replyWithVideo({
+            source: got.stream(dom.window.data.video.download_addr.url_list.pop())
+          })
+        } catch (e) {
+          return ctx.reply(dom.window.data.video.download_addr.url_list.pop())
+        }
       } else {
         return ctx.reply(ctx.i18n.t('errors.stream'))
       }

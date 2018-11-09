@@ -40,6 +40,7 @@ const command = ctx => {
 const download = async (ctx, url) => {
   try {
     const response = await got(url)
+
     if (response.body) {
       const dom = new JSDOM(response.body, { runScripts: 'outside-only' })
 
@@ -50,19 +51,26 @@ const download = async (ctx, url) => {
       dom.runVMScript(s)
 
       if (dom.window.data && dom.window.data.video) {
+        let video = dom.window.data.video.download_addr.url_list.pop()
+
+        if (video.startsWith('//')) {
+          video = `https:${video}`
+        }
+
         try {
           return ctx.replyWithVideo({
-            source: got.stream(dom.window.data.video.download_addr.url_list.pop())
+            source: got.stream(video)
           })
         } catch (e) {
-          return ctx.reply(dom.window.data.video.download_addr.url_list.pop())
+          console.log(e)
+          return ctx.reply(video)
         }
       } else {
         return ctx.reply(ctx.i18n.t('errors.stream'))
       }
     }
-  } catch (error) {
-    console.error(error)
+  } catch (e) {
+    console.log(e)
     return ctx.reply(ctx.i18n.t('errors.http'))
   }
 }

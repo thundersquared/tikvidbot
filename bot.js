@@ -25,6 +25,14 @@ if (config.mysql && config.mysql.host) {
   bot.use(session.middleware())
 }
 
+// Internationalization
+const i18n = new TelegrafI18n({
+  directory: path.resolve(__dirname, 'locales'),
+  defaultLanguage: 'en',
+  sessionName: 'session'
+})
+bot.use(i18n.middleware())
+
 // Limit lookups
 const limiter = new RateLimit({
   window: 5 * 60 * 1000,
@@ -33,17 +41,9 @@ const limiter = new RateLimit({
     return ctx.reply(ctx.i18n.t('rate.limit'))
   }
 })
-
-// Internationalization
-const i18n = new TelegrafI18n({
-  directory: path.resolve(__dirname, 'locales'),
-  defaultLanguage: 'en',
-  sessionName: 'session'
-})
+bot.use(limiter)
 
 // Apply middlewares
-bot.use(limiter)
-bot.use(i18n.middleware())
 bot.use(commandParts())
 bot.use((ctx, next) => {
   if (ctx.session) {

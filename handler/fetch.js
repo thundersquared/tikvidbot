@@ -21,9 +21,9 @@ const command = ctx => {
 
     let urls = getUrls(message)
 
-    if (message && urls.length > 0) {
+    if (urls.size > 0) {
       urls.forEach(url => {
-        if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+?\//)) {
+        if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/)) {
           if (ctx.session) {
             ctx.session.lookups++
           }

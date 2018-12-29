@@ -1,3 +1,4 @@
+const getUrls       = require('get-urls')
 const got           = require('got')
 const jsdom         = require('jsdom')
 const Extra         = require('telegraf/extra')
@@ -8,32 +9,40 @@ const { JSDOM }     = jsdom
 // Domain checks
 const command = ctx => {
   if (ctx.message.text) {
-    let url
+    let message
 
     if (typeof ctx.state.command !== 'undefined') {
       if (['fetch', 'download'].indexOf(ctx.state.command.command) !== -1) {
-        url = ctx.state.command.args
+        message = ctx.state.command.args
       }
     } else {
-      url = ctx.message.text
+      message = ctx.message.text
     }
 
-    if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+?\//)) {
-      if (ctx.session) {
-        ctx.session.lookups++
-      }
+    let urls = getUrls(message)
 
-      ctx.replyWithChatAction('typing')
+    if (message && urls.length > 0) {
+      urls.forEach(url => {
+        if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+?\//)) {
+          if (ctx.session) {
+            ctx.session.lookups++
+          }
 
-      return download(ctx, url)
+          ctx.replyWithChatAction('typing')
+
+          download(ctx, url)
+        }
+      })
     } else {
       if (ctx.message.chat.type !== 'group' || ctx.message.chat.type !== 'supergroup') {
         return ctx.reply(ctx.i18n.t('errors.url'))
       }
     }
+  } else {
+    if (ctx.message.chat.type !== 'group' || ctx.message.chat.type !== 'supergroup') {
+      return ctx.reply(ctx.i18n.t('errors.url'))
+    }
   }
-
-  return false
 }
 
 // Lookup process

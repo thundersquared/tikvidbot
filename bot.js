@@ -57,12 +57,17 @@ bot.use((ctx, next) => {
   return next()
 })
 
+// Catch errors
+bot.catch(err => {
+  console.log('Bot did an ooopsie!', err)
+})
+
 // Start command
-bot.start((ctx) => {
+bot.start(ctx => {
   return ctx.reply(ctx.i18n.t('commands.start'))
 })
 
-bot.command('help', (ctx) => ctx.reply(ctx.i18n.t('commands.help'), {
+bot.command('help', ctx => ctx.reply(ctx.i18n.t('commands.help'), {
   parse_mode: 'Markdown'
 }))
 
@@ -73,4 +78,4 @@ bot.command('download', fetch)
 
 bot.on('text', fetch)
 
-bot.startPolling()
+bot.launch()

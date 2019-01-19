@@ -59,7 +59,7 @@ bot.use((ctx, next) => {
 
 // Catch errors
 bot.catch(err => {
-  console.log('Bot did an ooopsie!', err.description)
+  console.log('Bot did an ooopsie!', err)
 })
 
 // Start command

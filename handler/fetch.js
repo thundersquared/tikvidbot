@@ -7,7 +7,7 @@ const { Script }    = require('vm')
 const { JSDOM }     = jsdom
 
 // Config import and checks
-const config = require('./config')
+const config = require('../config')
 
 if (!config.http || !config.http.agent) {
   process.exit()

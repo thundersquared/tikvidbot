@@ -8,6 +8,9 @@ const config = {
   telegram: {
     username: 'tikvidbot',
     token: 'your:token'
+  },
+  http: {
+    agent: 'your user agent'
   }
 }
 

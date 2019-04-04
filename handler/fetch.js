@@ -6,6 +6,13 @@ const Markup        = require('telegraf/markup')
 const { Script }    = require('vm')
 const { JSDOM }     = jsdom
 
+// Config import and checks
+const config = require('./config')
+
+if (!config.http || !config.http.agent) {
+  process.exit()
+}
+
 // Domain checks
 const command = ctx => {
   if (ctx.message.text) {
@@ -48,7 +55,11 @@ const command = ctx => {
 // Lookup process
 const download = async (ctx, url) => {
   try {
-    const response = await got(url)
+    const response = await got(url, {
+      headers: {
+        'user-agent': config.http.agent || `tikvidbot/${pkg.version} (https://github.com/thundersquared/tikvidbot)`
+      }
+    })
 
     if (response.body) {
       const dom = new JSDOM(response.body, { runScripts: 'outside-only' })

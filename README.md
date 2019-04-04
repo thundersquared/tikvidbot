@@ -34,6 +34,7 @@ The bot is written in Node.JS, relies on [telegraf](https://github.com/telegraf/
 | -------- | -------- | -------- |
 | telegram | token    | **Yes**  |
 | telegram | username | No       |
+| http     | agent    | **Yes**  |
 | mysql    | host     | No       |
 | mysql    | database | No       |
 | mysql    | user     | No       |

@@ -1,10 +1,7 @@
 const getUrls       = require('get-urls')
 const got           = require('got')
-const jsdom         = require('jsdom')
 const Extra         = require('telegraf/extra')
 const Markup        = require('telegraf/markup')
-const { Script }    = require('vm')
-const { JSDOM }     = jsdom
 
 // Config import and checks
 const config = require('../config')
@@ -62,16 +59,11 @@ const download = async (ctx, url) => {
     })
 
     if (response.body) {
-      const dom = new JSDOM(response.body, { runScripts: 'outside-only' })
+      let data = response.body.match(/"urls":\s*?(?<list>\[.+?\])/m)
+      let videos = JSON.parse(data.groups.list)
 
-      let scripts = dom.window.document.getElementsByTagName('script')
-      let script = [...scripts].filter(e => e.innerHTML.match(/var data/)).pop()
-      let data = script.innerHTML.split('$(function')[0]
-      let s = new Script(data)
-      dom.runVMScript(s)
-
-      if (dom.window.data && dom.window.data.video) {
-        let video = dom.window.data.video.download_addr.url_list.pop()
+      if (videos && videos.length) {
+        let video = videos.pop()
 
         if (video.startsWith('//')) {
           video = `https:${video}`

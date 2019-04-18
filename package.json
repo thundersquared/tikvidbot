@@ -1,6 +1,6 @@
 {
   "name": "tikvidbot",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "TikTok Video Download Telegram Bot",
   "main": "bot.js",
   "author": "thundersquared (https://thundersquared.com)",
@@ -8,7 +8,6 @@
   "dependencies": {
     "get-urls": "^8.0.0",
     "got": "^9.3.2",
-    "jsdom": "^13.0.0",
     "telegraf": "^3.25.0",
     "telegraf-command-parts": "^1.0.3",
     "telegraf-i18n": "^6.4.0",

@@ -20,6 +20,7 @@ const config = {
   http: {
     agent: process.env.HTTP_AGENT,
   },
+  whitelist: process.env.WHITELIST ? process.env.WHITELIST.split(",") : [],
 };
 
 const envConfFile = path.resolve(

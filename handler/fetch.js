@@ -10,23 +10,33 @@ if (!config.http || !config.http.agent) {
   process.exit();
 }
 
+const isWhitelisted = (ctx) => {
+  return (
+    config.whitelist.length == 0 ||
+    config.whitelist.includes(ctx.message.from.username)
+  );
+};
+
 // Domain checks
 const command = (ctx) => {
-  if (ctx.message.text) {
-    let urls = getUrls(ctx.message.text);
-
-    urls.forEach((url) => {
-      if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/)) {
-        if (ctx.session) {
-          ctx.session.lookups++;
-        }
-
-        ctx.replyWithChatAction("typing");
-
-        download(ctx, url);
-      }
-    });
+  if (!ctx.message.text) return;
+  if (!isWhitelisted(ctx)) {
+    return ctx.reply(ctx.i18n.t("errors.whitelist"));
   }
+
+  let urls = getUrls(ctx.message.text);
+
+  urls.forEach((url) => {
+    if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/)) {
+      if (ctx.session) {
+        ctx.session.lookups++;
+      }
+
+      ctx.replyWithChatAction("typing");
+
+      download(ctx, url);
+    }
+  });
 };
 
 // Lookup process

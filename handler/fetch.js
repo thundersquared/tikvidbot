@@ -62,9 +62,14 @@ const download = async (ctx, url) => {
         }
 
         try {
-          return ctx.replyWithVideo({
-            source: got.stream(video),
-          });
+          return ctx.replyWithVideo(
+            {
+              source: got.stream(video),
+            },
+            {
+              reply_to_message_id: ctx.message.message_id,
+            }
+          );
         } catch (e) {
           console.log(e);
           return ctx.reply(video);

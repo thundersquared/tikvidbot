@@ -12,6 +12,11 @@ const config = {
     username: process.env.BOT_NAME,
     token: process.env.BOT_TOKEN,
   },
+  limiter: {
+    enabled: process.env.LIMITER_ENABLED,
+    window: process.env.LIMITER_WINDOW,
+    limit: process.env.LIMITER_LIMIT,
+  },
   http: {
     agent: process.env.HTTP_AGENT,
   },

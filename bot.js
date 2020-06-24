@@ -43,13 +43,15 @@ bot.use(i18n.middleware());
 
 // Limit lookups
 const limiter = new RateLimit({
-  window: 5 * 60 * 1000,
-  limit: 10,
+  window: config.limiter.window,
+  limit: config.limiter.limit,
   onLimitExceeded: (ctx, next) => {
     return ctx.reply(ctx.i18n.t("rate.limit"));
   },
 });
-bot.use(limiter);
+if (config.limiter.enabled) {
+  bot.use(limiter);
+}
 
 // Apply middlewares
 bot.use(commandParts());

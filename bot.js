@@ -85,9 +85,6 @@ bot.command("help", (ctx) =>
 
 bot.command("lang", lang);
 
-bot.command("fetch", fetch);
-bot.command("download", fetch);
-
 bot.hears(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/, fetch);
 
 bot.launch();

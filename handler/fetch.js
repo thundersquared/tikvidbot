@@ -13,35 +13,19 @@ if (!config.http || !config.http.agent) {
 // Domain checks
 const command = (ctx) => {
   if (ctx.message.text) {
-    let message;
+    let urls = getUrls(ctx.message.text);
 
-    if (typeof ctx.state.command !== "undefined") {
-      if (["fetch", "download"].indexOf(ctx.state.command.command) !== -1) {
-        message = ctx.state.command.args;
-      }
-    } else {
-      message = ctx.message.text;
-    }
-
-    let urls = getUrls(message);
-
-    if (urls.size > 0) {
-      urls.forEach((url) => {
-        if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/)) {
-          if (ctx.session) {
-            ctx.session.lookups++;
-          }
-
-          ctx.replyWithChatAction("typing");
-
-          download(ctx, url);
+    urls.forEach((url) => {
+      if (url.match(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/)) {
+        if (ctx.session) {
+          ctx.session.lookups++;
         }
-      });
-    } else {
-      return ctx.reply(ctx.i18n.t("errors.url"));
-    }
-  } else {
-    return ctx.reply(ctx.i18n.t("errors.url"));
+
+        ctx.replyWithChatAction("typing");
+
+        download(ctx, url);
+      }
+    });
   }
 };
 

@@ -32,7 +32,7 @@ const command = (ctx) => {
         ctx.session.lookups++;
       }
 
-      ctx.replyWithChatAction("typing");
+      ctx.replyWithChatAction("upload_video");
 
       download(ctx, url);
     }

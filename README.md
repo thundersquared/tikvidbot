@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="media/Icon@2x.png" width="128" />
+  <img src="https://github.com/thundersquared/tikvidbot/raw/master/media/Icon@2x.png" width="128" />
   <h3 align="center">tikvidbot</h3>
   <p align="center">A Telegram bot to fetch TikTok videos locally</p>
   <p align="center">
     <a href="https://t.me/tikvidbot" target="_blank">
-      <img src="media/Button@2x.png" width="128" />
+      <img src="https://github.com/thundersquared/tikvidbot/raw/master/media/Button@2x.png" width="128" />
     </a>
   </p>
 </p>

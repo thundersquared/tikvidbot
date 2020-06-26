@@ -19,6 +19,18 @@
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.25.tgz#59188b871208092e37767e4b3d80c3b3eaae43bd"
   integrity sha512-yfhIBix+AIFTmYGtkC0Bi+XGjSkOINykqKvO/Wqdz/DuXlAKK7HmhLAXdPIGsV4xzKcL3ev/zYc4yLNo+OvGaw==
 
+"@types/lodash@*":
+  version "4.14.157"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.157.tgz#fdac1c52448861dfde1a2e1515dbc46e54926dc8"
+  integrity sha512-Ft5BNFmv2pHDgxV5JDsndOWTRJ+56zte0ZpYLowp03tW+K+t8u8YMOzAnpuqPgzX6WO1XpDIUm7u04M8vdDiVQ==
+
+"@types/lowdb@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/lowdb/-/lowdb-1.0.9.tgz#1f6c27df72dd1c64522cc9a4566796d2dd058d38"
+  integrity sha512-LBRG5EPXFOJDoJc9jACstMhtMP+u+UkPYllBeGQXXKiaHc+uzJs9+/Aynb/5KkX33DtrIiKyzNVTPQc/4RcD6A==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/mysql@^2.15.2":
   version "2.15.5"
   resolved "https://registry.yarnpkg.com/@types/mysql/-/mysql-2.15.5.tgz#6d75afb5cc018c9d66b2f37a046924e397f85430"
@@ -135,13 +147,13 @@ get-stream@^4.0.0, get-stream@^4.1.0:
   dependencies:
     pump "^3.0.0"
 
-get-urls@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/get-urls/-/get-urls-8.0.0.tgz#62a0225cf96e2336b57e5041781f015141f81511"
-  integrity sha512-9c6aVD6HqnpFjqWSoRzSGNo69hNnSa8EevNFVeIRSLYqYlIJNvtHgrqiQ1sUjHwbZPBY5gO1FMlVjmElfdneqw==
+get-urls@^9.2.0:
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/get-urls/-/get-urls-9.2.0.tgz#df05cfad3ad984a34a5794209b837dd507af53fd"
+  integrity sha512-ErGHKhzGIrtobqmNNxjy7yxe4cEmAp9SMerzmFpldn0CkEr2EC+SvIiyef038JDjl2LVng7MMw8YunUKM7k3ww==
   dependencies:
-    normalize-url "^3.3.0"
-    url-regex "^4.0.0"
+    normalize-url "^4.3.0"
+    url-regex "^5.0.0"
 
 got@^9.3.2:
   version "9.5.0"
@@ -160,6 +172,11 @@ got@^9.3.2:
     to-readable-stream "^1.0.0"
     url-parse-lax "^3.0.0"
 
+graceful-fs@^4.1.3:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
+  integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
+
 http-cache-semantics@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#6c2ef57e22090b177828708a52eaeae9d1d63e1b"
@@ -170,10 +187,15 @@ inherits@~2.0.3:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
 
-ip-regex@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-1.0.3.tgz#dc589076f659f419c222039a33316f1c7387effd"
-  integrity sha1-3FiQdvZZ9BnCIgOaMzFvHHOH7/0=
+ip-regex@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-4.1.0.tgz#5ad62f685a14edb421abebc2fff8db94df67b455"
+  integrity sha512-pKnZpbgCTfH/1NLIlOduP/V+WRXzC2MOz3Qo8xmxk8C5GudJLgK5QyLVXOSWy3ParAH7Eemurl3xjv/WXYFvMA==
+
+is-promise@^2.1.0:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/is-promise/-/is-promise-2.2.2.tgz#39ab959ccbf9a774cf079f7b40c7a26f763135f1"
+  integrity sha512-+lP4/6lKUBfQjZ2pdxThZvLUAafmZb8OAxFb8XXtiQmS35INgr85hdOGoEs124ez1FCnZJt6jau/T+alh58QFQ==
 
 isarray@~1.0.0:
   version "1.0.0"
@@ -199,6 +221,22 @@ keyv@^3.0.0:
   integrity sha512-9ykJ/46SN/9KPM/sichzQ7OvXyGDYKGTaDlKMGCAlg2UK8KRy4jb0d8sFc+0Tt0YYnThq8X2RZgCg74RPxgcVA==
   dependencies:
     json-buffer "3.0.0"
+
+lodash@4:
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
+  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lowdb@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/lowdb/-/lowdb-1.0.0.tgz#5243be6b22786ccce30e50c9a33eac36b20c8064"
+  integrity sha512-2+x8esE/Wb9SQ1F9IHaYWfsC9FIecLOPrK4g17FGEayjUWH172H6nwicRovGvSE2CPZouc2MCIqCI7h9d+GftQ==
+  dependencies:
+    graceful-fs "^4.1.3"
+    is-promise "^2.1.0"
+    lodash "4"
+    pify "^3.0.0"
+    steno "^0.4.1"
 
 lowercase-keys@^1.0.0, lowercase-keys@^1.0.1:
   version "1.0.1"
@@ -235,10 +273,15 @@ node-fetch@^2.2.0:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.3.0.tgz#1a1d940bbfb916a1d3e0219f037e89e71f8c5fa5"
   integrity sha512-MOd8pV3fxENbryESLgVIeaGKrdl+uaYhCSSVkjeOb/31/njTpcis5aWfdqgNlHIrKOLRbMnfPINPOML2CIFeXA==
 
-normalize-url@^3.1.0, normalize-url@^3.3.0:
+normalize-url@^3.1.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
+
+normalize-url@^4.3.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.5.0.tgz#453354087e6ca96957bd8f5baf753f5982142129"
+  integrity sha512-2s47yzUxdexf1OhyRi4Em83iQk0aPvwTddtFz4hnSSw9dCEsLEGf6SwIO8ss/19S9iBb5sJaOuTvTGDeZI00BQ==
 
 once@^1.3.1, once@^1.4.0:
   version "1.4.0"
@@ -251,6 +294,11 @@ p-cancelable@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-1.0.0.tgz#07e9c6d22c31f9c6784cb4f1e1454a79b6d9e2d6"
   integrity sha512-USgPoaC6tkTGlS831CxsVdmZmyb8tR1D+hStI84MyckLOzfJlYQUweomrwE3D8T7u5u5GVuW064LT501wHTYYA==
+
+pify@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/pify/-/pify-3.0.0.tgz#e5a4acd2c101fdf3d9a4d07f0dbc4db49dd28176"
+  integrity sha1-5aSs0sEB/fPZpNB/DbxNtJ3SgXY=
 
 prepend-http@^2.0.0:
   version "2.0.0"
@@ -320,6 +368,13 @@ sqlstring@2.3.1:
   resolved "https://registry.yarnpkg.com/sqlstring/-/sqlstring-2.3.1.tgz#475393ff9e91479aea62dcaf0ca3d14983a7fb40"
   integrity sha1-R1OT/56RR5rqYtyvDKPRSYOn+0A=
 
+steno@^0.4.1:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/steno/-/steno-0.4.4.tgz#071105bdfc286e6615c0403c27e9d7b5dcb855cb"
+  integrity sha1-BxEFvfwobmYVwEA8J+nXtdy4Vcs=
+  dependencies:
+    graceful-fs "^4.1.3"
+
 string_decoder@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.1.1.tgz#9cf1611ba62685d7030ae9e4ba34149c3af03fc8"
@@ -350,6 +405,14 @@ telegraf-ratelimit@^2.0.0:
   dependencies:
     debug "^3.1.0"
 
+telegraf-session-local@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/telegraf-session-local/-/telegraf-session-local-1.0.3.tgz#3fdf73041101a54b6fd6363b4f3efe9fb068b383"
+  integrity sha512-qqRa3XossChDOCpmRoKDcUFETFH6KOhaR7vqEOyFdzcjQJK957/eS8IH3rOo7dIC+yiUM6pjF04gQRO3Jx26iw==
+  dependencies:
+    "@types/lowdb" "^1.0.9"
+    lowdb "^1.0.0"
+
 telegraf-session-mysql@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/telegraf-session-mysql/-/telegraf-session-mysql-5.1.0.tgz#8631c59c9dbe31e9f87e1fca3b6058477d897189"
@@ -374,10 +437,10 @@ telegram-typings@^3.6.0:
   resolved "https://registry.yarnpkg.com/telegram-typings/-/telegram-typings-3.6.1.tgz#1288d547f8694b61f1c01c2993e295f3114d9e25"
   integrity sha512-njVv1EAhIZnmQVLocZEADYUyqA1WIXuVcDYlsp+mXua/XB0pxx+PKtMSPeZ/EE4wPWTw9h/hA9ASTT6yQelkiw==
 
-tlds@^1.187.0:
-  version "1.203.1"
-  resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.203.1.tgz#4dc9b02f53de3315bc98b80665e13de3edfc1dfc"
-  integrity sha512-7MUlYyGJ6rSitEZ3r1Q1QNV8uSIzapS8SmmhSusBuIc7uIxPPwsKllEP0GRp1NS6Ik6F+fRZvnjDWm3ecv2hDw==
+tlds@^1.203.0:
+  version "1.207.0"
+  resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.207.0.tgz#459264e644cf63ddc0965fece3898913286b1afd"
+  integrity sha512-k7d7Q1LqjtAvhtEOs3yN14EabsNO8ZCoY6RESSJDB9lst3bTx3as/m1UuAeCKzYxiyhR1qq72ZPhpSf+qlqiwg==
 
 to-readable-stream@^1.0.0:
   version "1.0.0"
@@ -391,13 +454,13 @@ url-parse-lax@^3.0.0:
   dependencies:
     prepend-http "^2.0.0"
 
-url-regex@^4.0.0:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/url-regex/-/url-regex-4.1.1.tgz#a5617b22e15e26dac57ce74c3f52088bcdfec995"
-  integrity sha512-ViSDgDPNKkrQHI81GLCjdDN+Rsk3tAW/uLXlBOJxtcHzWZjta58Z0APXhfXzS89YszsheMnEvXeDXsWUB53wwA==
+url-regex@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/url-regex/-/url-regex-5.0.0.tgz#8f5456ab83d898d18b2f91753a702649b873273a"
+  integrity sha512-O08GjTiAFNsSlrUWfqF1jH0H1W3m35ZyadHrGv5krdnmPPoxP27oDTqux/579PtaroiSGm5yma6KT1mHFH6Y/g==
   dependencies:
-    ip-regex "^1.0.1"
-    tlds "^1.187.0"
+    ip-regex "^4.1.0"
+    tlds "^1.203.0"
 
 util-deprecate@~1.0.1:
   version "1.0.2"

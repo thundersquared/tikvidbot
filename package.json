@@ -6,7 +6,7 @@
   "author": "thundersquared (https://thundersquared.com)",
   "license": "MIT",
   "dependencies": {
-    "get-urls": "^8.0.0",
+    "get-urls": "^9.2.0",
     "got": "^9.3.2",
     "telegraf": "^3.25.0",
     "telegraf-command-parts": "^1.0.3",

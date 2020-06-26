@@ -12,6 +12,7 @@
     "telegraf-command-parts": "^1.0.3",
     "telegraf-i18n": "^6.4.0",
     "telegraf-ratelimit": "^2.0.0",
+    "telegraf-session-local": "^1.0.3",
     "telegraf-session-mysql": "^5.1.0"
   },
   "scripts": {

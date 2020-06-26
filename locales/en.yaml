@@ -20,3 +20,4 @@ errors:
   url: I can download only TikTok videos and this doesn't look like a valid URL.
   http: Couldn't fetch shared URL. Please check if it's available and try again later.
   stream: No valid streams were found. Please try again later!
+  whitelist: You need to be whitelisted to be able to use the bot. Contact administrator.

@@ -1,0 +1,31 @@
+---
+version: "3.8"
+services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 76q6wcHQsPrKxkEW87RAmYaKpfVDuL
+      MYSQL_DATABASE: tikvidbot
+      MYSQL_USER: tikvidbot
+      MYSQL_PASSWORD: 3XV11JZgwADtt3k9rAVJJlfAqPXVxN
+
+  tikvidbot:
+    depends_on:
+      - mysql
+    build: .
+    restart: always
+    environment:
+      BOT_NAME:
+      BOT_TOKEN:
+      DB_HOST: mysql
+      DB_NAME: tikvidbot
+      DB_USER: tikvidbot
+      DB_PASS: 3XV11JZgwADtt3k9rAVJJlfAqPXVxN
+      LIMITER_ENABLED: true
+      LIMITER_WINDOW: 30000
+      LIMITER_LIMIT: 10
+      HTTP_AGENT: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/605.1.15 (KHTML, like Gecko)

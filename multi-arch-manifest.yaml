@@ -1,0 +1,16 @@
+image: andrusha/tikvidbot:latest
+manifests:
+  - image: andrusha/tikvidbot:amd64
+    platform:
+      architecture: amd64
+      os: linux
+  - image: andrusha/tikvidbot:arm32v7
+    platform:
+      architecture: arm
+      os: linux
+      variant: v7
+  - image: andrusha/tikvidbot:arm64v8
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8

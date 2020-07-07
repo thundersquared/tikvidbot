@@ -1,15 +1,15 @@
-image: andrusha/tikvidbot:latest
+image: thundersquared/tikvidbot:latest
 manifests:
-  - image: andrusha/tikvidbot:amd64
-    platform:
+  - image: thundersquared/tikvidbot:amd64
+    Platform:
       architecture: amd64
       os: linux
-  - image: andrusha/tikvidbot:arm32v7
+  - image: thundersquared/tikvidbot:arm32v7
     platform:
       architecture: arm
       os: linux
       variant: v7
-  - image: andrusha/tikvidbot:arm64v8
+  - image: thundersquared/tikvidbot:arm64v8
     platform:
       architecture: arm64
       os: linux

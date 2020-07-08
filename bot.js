@@ -57,8 +57,6 @@ if (config.limiter.enabled) {
 bot.use(commandParts());
 bot.use((ctx, next) => {
   if (ctx.session) {
-    ctx.session.lookups = ctx.session.lookups || 0;
-    ctx.session.limit = ctx.session.limit || 0;
     ctx.session.lang = ctx.session.lang || "en";
 
     ctx.i18n.locale(ctx.session.lang);
@@ -85,6 +83,8 @@ bot.command("help", (ctx) =>
 
 bot.command("lang", lang);
 
-bot.hears(/https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/, fetch);
+bot.on("inline_query", fetch.inlineMessage);
+
+bot.hears(fetch.redex, fetch.chatMessage);
 
 bot.launch();

@@ -6,7 +6,7 @@
 set -eux
 
 MANIFEST_TOOL_VERSION=$(curl -s https://api.github.com/repos/estesp/manifest-tool/releases/latest | grep 'tag_name' | cut -d\" -f4)
-curl -fsSL -o manifest-tool "https://github.com/estesp/manifest-tool/releases/download/${MANIFEST_TOOL_VERSION}/manifest-tool-$(uname -s)-$(uname -m)"
+curl -fsSL -o manifest-tool "https://github.com/estesp/manifest-tool/releases/download/${MANIFEST_TOOL_VERSION}/manifest-tool-linux-amd64"
 chmod +x manifest-tool
 
 # Push latest manifest

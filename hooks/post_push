@@ -3,7 +3,18 @@
 # Use manifest-tool to create the manifest, given the experimental
 # "docker manifest" command isn't available yet on Docker Hub.
 
-curl -Lo manifest-tool https://github.com/estesp/manifest-tool/releases/download/v0.9.0/manifest-tool-linux-amd64
+MANIFEST_TOOL_VERSION=$(curl -s https://api.github.com/repos/estesp/manifest-tool/releases/latest | grep 'tag_name' | cut -d\" -f4)
+curl -Lo manifest-tool  "https://github.com/estesp/manifest-tool/releases/download/${MANIFEST_TOOL_VERSION}/manifest-tool-$(uname -s)-$(uname -m)"
 chmod +x manifest-tool
 
-./manifest-tool push from-spec multi-arch-manifest.yaml
+# Push latest manifest
+if [[ $DOCKER_TAG = "latest" ]]; then
+    ./manifest-tool push from-spec multi-arch-manifest.latest.yml
+fi
+
+# Push tag manifest
+TAG_REGEX="^[0-9.]+$"
+if [[ $DOCKER_TAG =~ $TAG_REGEX ]]; then
+    sed -i "s/DOCKER_TAG/$DOCKER_TAG/" multi-arch-manifest.tag.yml
+    ./manifest-tool push from-spec multi-arch-manifest.tag.yml
+fi

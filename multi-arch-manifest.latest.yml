@@ -1,7 +1,7 @@
 image: thundersquared/tikvidbot:latest
 manifests:
   - image: thundersquared/tikvidbot:amd64
-    Platform:
+    platform:
       architecture: amd64
       os: linux
   - image: thundersquared/tikvidbot:arm32v7

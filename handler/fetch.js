@@ -26,14 +26,18 @@ const handleChatMessage = async (ctx) => {
         return ctx.reply(ctx.i18n.t("errors.whitelist"));
     }
 
-    let urls = getUrls(ctx.message.text);
+    let urls = Array.from(getUrls(ctx.message.text));
 
-    urls.forEach((url) => {
-        if (url.match(shortLinkRegex)) {
-            ctx.replyWithChatAction("upload_video");
-            replyWithVideo(ctx, url);
-        }
-    });
+    return await Promise.all(
+        urls.map(async (url) => {
+            if (url.match(shortLinkRegex)) {
+                await ctx.replyWithChatAction("upload_video");
+                return await replyWithVideo(ctx, url);
+            }
+
+            return false;
+        })
+    );
 };
 
 const handleInlineMessage = async (ctx) => {
@@ -48,24 +52,24 @@ const handleInlineMessage = async (ctx) => {
                 let data = await fetchTikTok(url);
                 if (!data) return;
 
-                let info = data.props?.pageProps?.videoData?.itemInfos;
-                let cover = info?.covers[0];
-                let meta = info?.video?.videoMeta;
+                let video = await fetchVideoMeta(data);
+                if (!video) return false
 
                 return {
                     type: "video",
-                    id: data.props?.pageProps?.key,
-                    video_url: getVideoUrl(data),
+                    id: video.id,
+                    video_url: video.videoUrlNoWaterMark,
                     mime_type: "video/mp4",
-                    thumb_url: cover,
-                    title: `via @${config.telegram.username}`,
-                    video_width: meta?.width,
-                    video_height: meta?.height,
-                    video_duration: meta?.duration,
+                    thumb_url: video.imageUrl,
+                    title: `${video.text} via @${config.telegram.username}`,
+                    video_width: video.videoMeta?.width,
+                    video_height: video.videoMeta?.height,
+                    video_duration: video.videoMeta?.duration,
                 };
             }
         })
     );
+
     if (!results) return;
 
     try {
@@ -79,16 +83,16 @@ const replyWithVideo = async (ctx, url) => {
     let data = await fetchTikTok(url);
     if (!data) return ctx.reply(ctx.i18n.t("errors.http"));
 
-    let video = await getVideoUrl(data);
+    let video = await fetchVideoMeta(data);
     if (!video) return ctx.reply(ctx.i18n.t("errors.stream"));
 
     try {
-        return ctx.replyWithVideo(
-            {source: got.stream(video)},
+        return await ctx.replyWithVideo(
+            {source: got.stream(video.videoUrlNoWaterMark)},
             {reply_to_message_id: ctx.message.message_id}
         );
     } catch (e) {
-        return ctx.reply(video);
+        return ctx.reply(video.videoUrlNoWaterMark);
     }
 };
 
@@ -103,13 +107,10 @@ const fetchTikTok = async (url) => {
     }
 };
 
-const getVideoUrl = async (location) => {
-    try {
-        const videoMeta = await TikTokScraper.getVideoMeta(location);
-        return videoMeta?.videoUrlNoWaterMark;
-    } catch (error) {
-        return null;
-    }
+const fetchVideoMeta = async (url) => {
+    return await TikTokScraper.getVideoMeta(url, {
+        hdVideo: true,
+    });
 };
 
 module.exports = {

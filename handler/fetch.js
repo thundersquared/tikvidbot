@@ -1,5 +1,6 @@
 const getUrls = require("get-urls");
 const got = require("got");
+const TikTokScraper = require("tiktok-scraper");
 const Extra = require("telegraf/extra");
 const Markup = require("telegraf/markup");
 
@@ -7,122 +8,114 @@ const Markup = require("telegraf/markup");
 const config = require("../config");
 
 if (!config.http || !config.http.agent) {
-  process.exit();
+    process.exit();
 }
 
-const tiktokRegex = /https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/;
+// TODO: add full link support
+// const fullLinkRegex = /https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/;
+const shortLinkRegex = /https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/;
 
 const isWhitelisted = (username) => {
-  return config.whitelist.length == 0 || config.whitelist.includes(username);
+    return config.whitelist.length == 0 || config.whitelist.includes(username);
 };
 
 const handleChatMessage = async (ctx) => {
-  if (!ctx.message.text) return;
-  if (!isWhitelisted(ctx.message.from.username)) {
-    return ctx.reply(ctx.i18n.t("errors.whitelist"));
-  }
+    if (!ctx.message.text) return;
 
-  let urls = getUrls(ctx.message.text);
-
-  urls.forEach((url) => {
-    if (url.match(tiktokRegex)) {
-      ctx.replyWithChatAction("upload_video");
-      replyWithVideo(ctx, url);
+    if (!isWhitelisted(ctx.message.from.username)) {
+        return ctx.reply(ctx.i18n.t("errors.whitelist"));
     }
-  });
+
+    let urls = getUrls(ctx.message.text);
+
+    urls.forEach((url) => {
+        if (url.match(shortLinkRegex)) {
+            ctx.replyWithChatAction("upload_video");
+            replyWithVideo(ctx, url);
+        }
+    });
 };
 
 const handleInlineMessage = async (ctx) => {
-  if (!isWhitelisted(ctx.inlineQuery.from.username)) return;
+    if (!isWhitelisted(ctx.inlineQuery.from.username)) return;
 
-  let query = ctx.inlineQuery.query;
-  let urls = Array.from(getUrls(query));
+    let query = ctx.inlineQuery.query;
+    let urls = Array.from(getUrls(query));
 
-  let results = await Promise.all(
-    urls.map(async (url) => {
-      if (url.match(tiktokRegex)) {
-        let data = await fetchTikTok(url);
-        if (!data) return;
+    let results = await Promise.all(
+        urls.map(async (url) => {
+            if (url.match(shortLinkRegex)) {
+                let data = await fetchTikTok(url);
+                if (!data) return;
 
-        let info = data.props?.pageProps?.videoData?.itemInfos;
-        let cover = info?.covers[0];
-        let meta = info?.video?.videoMeta;
+                let info = data.props?.pageProps?.videoData?.itemInfos;
+                let cover = info?.covers[0];
+                let meta = info?.video?.videoMeta;
 
-        return {
-          type: "video",
-          id: data.props?.pageProps?.key,
-          video_url: getVideoUrl(data),
-          mime_type: "video/mp4",
-          thumb_url: cover,
-          title: `via @${config.telegram.username}`,
-          video_width: meta?.width,
-          video_height: meta?.height,
-          video_duration: meta?.duration,
-        };
-      }
-    })
-  );
-  if (!results) return;
+                return {
+                    type: "video",
+                    id: data.props?.pageProps?.key,
+                    video_url: getVideoUrl(data),
+                    mime_type: "video/mp4",
+                    thumb_url: cover,
+                    title: `via @${config.telegram.username}`,
+                    video_width: meta?.width,
+                    video_height: meta?.height,
+                    video_duration: meta?.duration,
+                };
+            }
+        })
+    );
+    if (!results) return;
 
-  try {
-    ctx.answerInlineQuery(results);
-  } catch (e) {
-    console.log(e);
-  }
+    try {
+        ctx.answerInlineQuery(results);
+    } catch (e) {
+        console.log(e);
+    }
 };
 
 const replyWithVideo = async (ctx, url) => {
-  let data = await fetchTikTok(url);
-  if (!data) return ctx.reply(ctx.i18n.t("errors.http"));
+    let data = await fetchTikTok(url);
+    if (!data) return ctx.reply(ctx.i18n.t("errors.http"));
 
-  let video = getVideoUrl(data);
-  if (!video) return ctx.reply(ctx.i18n.t("errors.stream"));
+    let video = await getVideoUrl(data);
+    if (!video) return ctx.reply(ctx.i18n.t("errors.stream"));
 
-  try {
-    return ctx.replyWithVideo(
-      { source: got.stream(video) },
-      { reply_to_message_id: ctx.message.message_id }
-    );
-  } catch (e) {
-    console.log(e);
-    return ctx.reply(video);
-  }
+    try {
+        return ctx.replyWithVideo(
+            {source: got.stream(video)},
+            {reply_to_message_id: ctx.message.message_id}
+        );
+    } catch (e) {
+        return ctx.reply(video);
+    }
 };
 
 const fetchTikTok = async (url) => {
-  try {
-    const response = await got(url, {
-      headers: { "user-agent": config.http.agent },
-    });
-
-    return parseResponseBody(response.body);
-  } catch (e) {
-    console.log(e);
-  }
+    try {
+        const {redirectUrls} = await got(url, {
+            headers: {"user-agent": config.http.agent},
+        });
+        return redirectUrls.pop();
+    } catch (e) {
+        console.log(e);
+    }
 };
 
-const parseResponseBody = (responseBody) => {
-  let raw = responseBody.match(
-    /<script id="__NEXT_DATA__".*?>(?<data>.*?)<\/script>/m
-  );
-  return JSON.parse(raw.groups.data);
-};
-
-const getVideoUrl = (data) => {
-  let videos = data?.props?.pageProps?.videoData?.itemInfos?.video?.urls;
-  if (!videos || !videos.length) return;
-
-  let video = videos[0];
-
-  if (video.startsWith("//")) {
-    return `https:${video}`;
-  } else {
-    return video;
-  }
+const getVideoUrl = async (location) => {
+    try {
+        const videoMeta = await TikTokScraper.getVideoMeta(location);
+        return videoMeta?.videoUrlNoWaterMark;
+    } catch (error) {
+        return null;
+    }
 };
 
 module.exports = {
-  redex: tiktokRegex,
-  chatMessage: handleChatMessage,
-  inlineMessage: handleInlineMessage,
+    // TODO: add full link support
+    // fullLink: fullLinkRegex,
+    shortLink: shortLinkRegex,
+    chatMessage: handleChatMessage,
+    inlineMessage: handleInlineMessage,
 };

@@ -49,10 +49,7 @@ const handleInlineMessage = async (ctx) => {
     let results = await Promise.all(
         urls.map(async (url) => {
             if (url.match(shortLinkRegex)) {
-                let data = await fetchTikTok(url);
-                if (!data) return;
-
-                let video = await fetchVideoMeta(data);
+                let video = await fetchVideoMeta(url);
                 if (!video) return false
 
                 return {
@@ -80,10 +77,7 @@ const handleInlineMessage = async (ctx) => {
 };
 
 const replyWithVideo = async (ctx, url) => {
-    let data = await fetchTikTok(url);
-    if (!data) return ctx.reply(ctx.i18n.t("errors.http"));
-
-    let video = await fetchVideoMeta(data);
+    let video = await fetchVideoMeta(url);
     if (!video) return ctx.reply(ctx.i18n.t("errors.stream"));
 
     try {
@@ -108,9 +102,16 @@ const fetchTikTok = async (url) => {
 };
 
 const fetchVideoMeta = async (url) => {
-    return await TikTokScraper.getVideoMeta(url, {
+    let res = await TikTokScraper.getVideoMeta(url, {
+        noWaterMark: true,
         hdVideo: true,
     });
+
+    if (!res.videoUrlNoWaterMark || res.videoUrlNoWaterMark.length === 0) {
+        res.videoUrlNoWaterMark = res.videoUrl;
+    }
+
+    return res;
 };
 
 module.exports = {

@@ -58,7 +58,6 @@ bot.use(commandParts());
 bot.use((ctx, next) => {
     if (ctx.session) {
         ctx.session.lang = ctx.session.lang || "en";
-
         ctx.i18n.locale(ctx.session.lang);
     }
 

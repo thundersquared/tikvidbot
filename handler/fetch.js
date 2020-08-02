@@ -1,3 +1,4 @@
+const validUrl = require("valid-url");
 const getUrls = require("get-urls");
 const got = require("got");
 const TikTokScraper = require("tiktok-scraper");
@@ -32,7 +33,12 @@ const handleChatMessage = async (ctx) => {
         urls.map(async (url) => {
             if (url.match(shortLinkRegex)) {
                 await ctx.replyWithChatAction("upload_video");
-                return await replyWithVideo(ctx, url);
+                try {
+                    return await replyWithVideo(ctx, url);
+                } catch (e) {
+                    console.error(e);
+                    return false;
+                }
             }
 
             return false;
@@ -51,6 +57,10 @@ const handleInlineMessage = async (ctx) => {
             if (url.match(shortLinkRegex)) {
                 let video = await fetchVideoMeta(url);
                 if (!video) return false
+
+                if (!validUrl.isUri(video.videoUrlNoWaterMark)){
+                    return false;
+                }
 
                 return {
                     type: "video",
@@ -80,24 +90,19 @@ const replyWithVideo = async (ctx, url) => {
     let video = await fetchVideoMeta(url);
     if (!video) return ctx.reply(ctx.i18n.t("errors.stream"));
 
+    if (!validUrl.isUri(video.videoUrlNoWaterMark)){
+        return false;
+    }
+
     try {
+        let source = got.stream(video.videoUrlNoWaterMark);
+
         return await ctx.replyWithVideo(
-            {source: got.stream(video.videoUrlNoWaterMark)},
+            {source: source},
             {reply_to_message_id: ctx.message.message_id}
         );
     } catch (e) {
         return ctx.reply(video.videoUrlNoWaterMark);
-    }
-};
-
-const fetchTikTok = async (url) => {
-    try {
-        const {redirectUrls} = await got(url, {
-            headers: {"user-agent": config.http.agent},
-        });
-        return redirectUrls.pop();
-    } catch (e) {
-        console.log(e);
     }
 };
 

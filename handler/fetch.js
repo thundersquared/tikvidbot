@@ -14,7 +14,7 @@ if (!config.http || !config.http.agent) {
 
 // TODO: add full link support
 // const fullLinkRegex = /https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/;
-const shortLinkRegex = /https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/;
+const shortLinkRegex = /https??:\/\/(v[m|t]\.)??tiktok\.com\/(\w|\W|\d)+/;
 
 const isWhitelisted = (username) => {
     return config.whitelist.length == 0 || config.whitelist.includes(username);

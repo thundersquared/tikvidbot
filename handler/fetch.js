@@ -55,24 +55,28 @@ const handleInlineMessage = async (ctx) => {
     let results = await Promise.all(
         urls.map(async (url) => {
             if (url.match(shortLinkRegex)) {
-                let video = await fetchVideoMeta(url);
-                if (!video) return false
+                try {
+                    let video = await fetchVideoMeta(url);
+                    if (!video) return false;
 
-                if (!validUrl.isUri(video.videoUrlNoWaterMark)){
-                    return false;
+                    if (!validUrl.isUri(video.videoUrlNoWaterMark)) {
+                        return false;
+                    }
+
+                    return {
+                        type: "video",
+                        id: video.id,
+                        video_url: video.videoUrlNoWaterMark,
+                        mime_type: "video/mp4",
+                        thumb_url: video.imageUrl,
+                        title: `${video.text} via @${config.telegram.username}`,
+                        video_width: video.videoMeta?.width,
+                        video_height: video.videoMeta?.height,
+                        video_duration: video.videoMeta?.duration,
+                    };
+                } catch (e) {
+                    return ctx.reply(ctx.i18n.t("errors.stream"));
                 }
-
-                return {
-                    type: "video",
-                    id: video.id,
-                    video_url: video.videoUrlNoWaterMark,
-                    mime_type: "video/mp4",
-                    thumb_url: video.imageUrl,
-                    title: `${video.text} via @${config.telegram.username}`,
-                    video_width: video.videoMeta?.width,
-                    video_height: video.videoMeta?.height,
-                    video_duration: video.videoMeta?.duration,
-                };
             }
         })
     );
@@ -87,36 +91,50 @@ const handleInlineMessage = async (ctx) => {
 };
 
 const replyWithVideo = async (ctx, url) => {
-    let video = await fetchVideoMeta(url);
-    if (!video) return ctx.reply(ctx.i18n.t("errors.stream"));
-
-    if (!validUrl.isUri(video.videoUrlNoWaterMark)){
-        return false;
-    }
-
     try {
-        let source = got.stream(video.videoUrlNoWaterMark);
+        let video = await fetchVideoMeta(url);
+        if (!video) {
+            return ctx.reply(ctx.i18n.t("errors.stream"));
+        }
 
-        return await ctx.replyWithVideo(
-            {source: source},
-            {reply_to_message_id: ctx.message.message_id}
-        );
+        if (!validUrl.isUri(video.videoUrlNoWaterMark)) {
+            return false;
+        }
+
+        try {
+            const response = await got(video.videoUrlNoWaterMark);
+            if (response.statusCode === 200) {
+                const source = await got.stream(video.videoUrlNoWaterMark);
+                return await ctx.replyWithVideo(
+                    {source: source},
+                    {reply_to_message_id: ctx.message.message_id}
+                );
+            } else {
+                return await ctx.reply(ctx.i18n.t("errors.stream"));
+            }
+        } catch (e) {
+            return await ctx.reply(ctx.i18n.t("errors.stream"));
+        }
     } catch (e) {
-        return ctx.reply(video.videoUrlNoWaterMark);
+        return ctx.reply(ctx.i18n.t("errors.stream"));
     }
 };
 
 const fetchVideoMeta = async (url) => {
-    let res = await TikTokScraper.getVideoMeta(url, {
-        noWaterMark: true,
-        hdVideo: true,
-    });
+    try {
+        let res = await TikTokScraper.getVideoMeta(url, {
+            noWaterMark: true,
+            hdVideo: true,
+        });
 
-    if (!res.videoUrlNoWaterMark || res.videoUrlNoWaterMark.length === 0) {
-        res.videoUrlNoWaterMark = res.videoUrl;
+        if (!res.videoUrlNoWaterMark || res.videoUrlNoWaterMark.length === 0) {
+            res.videoUrlNoWaterMark = res.videoUrl;
+        }
+
+        return res;
+    } catch (e) {
+        return false;
     }
-
-    return res;
 };
 
 module.exports = {

@@ -16,6 +16,13 @@ if (!config.http || !config.http.agent) {
 // const fullLinkRegex = /https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/;
 const shortLinkRegex = /https??:\/\/(v[m|t]\.)??tiktok\.com\/(\w|\W|\d)+/;
 
+const gotOptions = {
+    headers: {
+        'User-Agent': config.http.agent,
+        'Referer': 'https://www.tiktok.com/',
+    },
+};
+
 const isWhitelisted = (username) => {
     return config.whitelist.length == 0 || config.whitelist.includes(username);
 };
@@ -102,9 +109,9 @@ const replyWithVideo = async (ctx, url) => {
         }
 
         try {
-            const response = await got(video.videoUrlNoWaterMark);
+            const response = await got(video.videoUrlNoWaterMark, gotOptions);
             if (response.statusCode === 200) {
-                const source = await got.stream(video.videoUrlNoWaterMark);
+                const source = await got.stream(video.videoUrlNoWaterMark, gotOptions);
                 return await ctx.replyWithVideo(
                     {source: source},
                     {reply_to_message_id: ctx.message.message_id}

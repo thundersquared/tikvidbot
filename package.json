@@ -7,14 +7,14 @@
   "license": "MIT",
   "dependencies": {
     "get-urls": "^10.0.0",
-    "got": "^11.5.0",
+    "got": "^11.8.0",
     "telegraf": "^3.38.0",
     "telegraf-command-parts": "^1.0.3",
     "telegraf-i18n": "^6.6.0",
     "telegraf-ratelimit": "^2.0.0",
     "telegraf-session-local": "^2.0.0",
     "telegraf-session-mysql": "^5.1.0",
-    "tiktok-scraper": "^1.3.3",
+    "tiktok-scraper": "^1.3.8",
     "valid-url": "^1.0.9"
   },
   "scripts": {
@@ -27,6 +27,6 @@
     "test": "mocha"
   },
   "devDependencies": {
-    "mocha": "^8.0.1"
+    "mocha": "^8.2.0"
   }
 }

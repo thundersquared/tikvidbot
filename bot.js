@@ -82,10 +82,11 @@ bot.command("help", (ctx) =>
 
 bot.command("lang", lang);
 
-bot.on("inline_query", fetch.inlineMessage);
+// Disabled inline queries as TikTok requires specific headers to display a video,
+// which we can't control since preview downloads are server-side
+// bot.on("inline_query", fetch.inlineMessage);
 
-// TODO: add full link support
-// bot.hears(fetch.fullLink, fetch.chatMessage);
+bot.hears(fetch.fullLink, fetch.chatMessage);
 bot.hears(fetch.shortLink, fetch.chatMessage);
 
 bot.launch();

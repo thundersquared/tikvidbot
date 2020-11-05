@@ -1,9 +1,7 @@
+const {unlink} = require('fs');
 const validUrl = require("valid-url");
 const getUrls = require("get-urls");
-const got = require("got");
 const TikTokScraper = require("tiktok-scraper");
-const Extra = require("telegraf/extra");
-const Markup = require("telegraf/markup");
 
 // Config import and checks
 const config = require("../config");
@@ -12,16 +10,8 @@ if (!config.http || !config.http.agent) {
     process.exit();
 }
 
-// TODO: add full link support
-// const fullLinkRegex = /https??:\/\/(vm\.)??tiktok\.com\/(\w|\W|\d)+/;
+const fullLinkRegex = /https:\/\/www\.tiktok\.com\/@.*\/video\/\d{18,}.*/;
 const shortLinkRegex = /https??:\/\/(v[m|t]\.)??tiktok\.com\/(\w|\W|\d)+/;
-
-const gotOptions = {
-    headers: {
-        'User-Agent': config.http.agent,
-        'Referer': 'https://www.tiktok.com/',
-    },
-};
 
 const isWhitelisted = (username) => {
     return config.whitelist.length == 0 || config.whitelist.includes(username);
@@ -98,32 +88,34 @@ const handleInlineMessage = async (ctx) => {
 };
 
 const replyWithVideo = async (ctx, url) => {
+    let dest = '/tmp';
+    let path = null;
+
     try {
-        let video = await fetchVideoMeta(url);
-        if (!video) {
-            return ctx.reply(ctx.i18n.t("errors.stream"));
-        }
+        let meta = await TikTokScraper.getVideoMeta(url);
 
-        if (!validUrl.isUri(video.videoUrlNoWaterMark)) {
-            return false;
-        }
+        let download = await TikTokScraper.video(url, {
+            download: true,
+            filepath: dest,
+            noWaterMark: true,
+        });
 
-        try {
-            const response = await got(video.videoUrlNoWaterMark, gotOptions);
-            if (response.statusCode === 200) {
-                const source = await got.stream(video.videoUrlNoWaterMark, gotOptions);
-                return await ctx.replyWithVideo(
-                    {source: source},
-                    {reply_to_message_id: ctx.message.message_id}
-                );
-            } else {
-                return await ctx.reply(ctx.i18n.t("errors.stream"));
-            }
-        } catch (e) {
-            return await ctx.reply(ctx.i18n.t("errors.stream"));
-        }
-    } catch (e) {
+        path = `${dest}/${meta.id}.mp4`;
+
+        return await ctx.replyWithVideo(
+            {source: path},
+            {reply_to_message_id: ctx.message.message_id}
+        );
+    } catch (err) {
         return ctx.reply(ctx.i18n.t("errors.stream"));
+    } finally {
+        if (path) {
+            unlink(path, (err) => {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        }
     }
 };
 
@@ -145,8 +137,7 @@ const fetchVideoMeta = async (url) => {
 };
 
 module.exports = {
-    // TODO: add full link support
-    // fullLink: fullLinkRegex,
+    fullLink: fullLinkRegex,
     shortLink: shortLinkRegex,
     chatMessage: handleChatMessage,
     inlineMessage: handleInlineMessage,

@@ -25,6 +25,11 @@ docker run --rm \
 thundersquared/tikvidbot
 ```
 
+
+## Start it without Docker
+
+Just run "yarn" once and then you can start the bot with "yarn dev"
+
 ## Tech stack
 
 The bot is written in Node.JS, relies on [telegraf](https://github.com/telegraf/telegraf) to consume Telegram's Bot API, loves [got](https://github.com/sindresorhus/got) for fetching video pages and streaming videos and [jsdom](https://github.com/jsdom/jsdom) for parsing and interacting with them.

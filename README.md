@@ -30,7 +30,7 @@ Start it without Docker:
 
 install node and yarn with this manual:
 
-https://github.com/Suyuimo/tikvidbot/blob/master/requirements.txt
+https://github.com/Suyuimo/tikvidbot/blob/master/INSTALL.md
 
 
 Just run "yarn" once and then you can start the bot with "yarn dev"

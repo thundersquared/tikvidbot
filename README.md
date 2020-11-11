@@ -26,7 +26,7 @@ thundersquared/tikvidbot
 ```
 
 
-Start it without Docker
+Start it without Docker:
 
 install node and yarn with this manual:
 

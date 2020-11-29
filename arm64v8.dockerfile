@@ -12,6 +12,9 @@ COPY --from=builder qemu-aarch64-static /usr/bin
 # Create app directory
 WORKDIR /usr/src/app
 
+# Required to build RE2
+RUN apk add python make g++
+
 # Install dependencies
 COPY package.json ./package.json
 COPY yarn.lock ./yarn.lock
